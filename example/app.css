@@ -3,10 +3,11 @@ body {
   padding: 0;
   background: #f4f6f9;
   color: #222;
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
-ul, li {
+ul,
+li {
   padding: 0;
   margin: 0;
   list-style: none;
@@ -22,7 +23,6 @@ label {
 }
 
 .app {
-
 }
 
 .app-header {
@@ -61,7 +61,7 @@ label {
 }
 
 .close-video::before {
-  content: '✖';
+  content: "✖";
   cursor: pointer;
   position: absolute;
   right: 0;
@@ -69,7 +69,7 @@ label {
   font-size: 20px;
   padding: 20px;
   z-index: 1;
-  line-height: .7;
+  line-height: 0.7;
   display: block;
   color: #fff;
 }
@@ -88,13 +88,11 @@ label {
   height: 100%;
 }
 
-
 .app .image-gallery,
 .app-sandbox {
   margin: 0 auto;
   width: 65%;
 }
-
 
 @media (max-width: 1320px) {
   .app-sandbox-content {
@@ -115,8 +113,31 @@ label {
   display: block;
 }
 
-@media (max-width: 768px) {
+.menuContent {
+  width: 80px;
+  border-radius: 5px;
+  background-color: #fff;
+  height: auto;
+}
+.menuContent > ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+}
 
+.menuContent > ul > li {
+  cursor: pointer;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #222;
+  font-weight: bold;
+}
+.menuContent > ul > li:hover {
+  color: #337ab7;
+}
+
+@media (max-width: 768px) {
   .app-header {
     font-size: 20px;
   }
