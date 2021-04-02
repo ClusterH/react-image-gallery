@@ -94,9 +94,27 @@ label {
   width: 65%;
 }
 
+.app .image-gallery.fullscreen {
+  display: contents;
+}
+
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  background: #555;
+  opacity: 0.6;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 5;
+  display: block;
+}
+
 @media (max-width: 1320px) {
   .app-sandbox-content {
     padding: 0 20px;
+    /* display: flex;
+    flex-direction: column; */
   }
 }
 
@@ -109,6 +127,48 @@ label {
   user-select: none;
 }
 
+.app-sandbox .sandbox-close {
+  display: none;
+}
+
+.app-sandbox.fullscreen {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 0px;
+  transition: width ease 0.5s;
+  height: 100vh;
+  padding-left: 20px;
+  margin-top: 0 !important;
+  background-color: transparent;
+  box-sizing: border-box;
+  margin-right: -20px;
+  z-index: 9;
+}
+
+.app-sandbox.fullscreen.showSandbox {
+  width: 300px;
+  margin-right: 0px;
+  background-color: #fff;
+}
+
+.app-sandbox.fullscreen.showSandbox .sandbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: block;
+}
+.app-sandbox.showSandbox .app-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.app-sandbox.fullscreen.showSandbox .app-buttons {
+  display: block;
+}
 .app-buttons li {
   display: block;
 }
@@ -177,6 +237,7 @@ label {
 
 .app-interval-input-group {
   display: table;
+  width: 250px;
 }
 
 .app-interval-label {
@@ -216,6 +277,17 @@ input.app-interval-input {
 
 .app-checkboxes {
   margin-top: 10px;
+}
+
+.app-sandbox.showSandbox .app-checkboxes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.app-sandbox.fullscreen.showSandbox .app-checkboxes {
+  display: block;
+  padding-top: 24px;
 }
 
 .app-checkboxes li {

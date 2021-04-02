@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { createRef } from "react";
 import ReactDOM from "react-dom";
 
@@ -10,14 +11,14 @@ class App extends React.Component {
     super();
     this.state = {
       showIndex: false,
-      showBullets: true,
+      showBullets: false,
       infinite: true,
-      showThumbnails: true,
+      showThumbnails: false,
       showFullscreenButton: true,
       showGalleryFullscreenButton: true,
       showPlayButton: true,
       showGalleryPlayButton: true,
-      showNav: true,
+      showNav: false,
       isRTL: false,
       slideDuration: 450,
       slideInterval: 2000,
@@ -30,18 +31,12 @@ class App extends React.Component {
       y: 0,
       settingShow: false,
       infoShow: false,
+      isFullScreen: true,
     };
 
     this.menuContentRef = React.createRef();
 
     this.images = [
-      // {
-      //   thumbnail: `${PREFIX_URL}4v.jpg`,
-      //   original: `${PREFIX_URL}4v.jpg`,
-      //   embedUrl: "https://www.youtube.com/embed/4pSzhZ76GdM?autoplay=1&showinfo=0",
-      //   description: "Render custom slides within the gallery",
-      //   renderItem: this._renderVideo.bind(this),
-      // },
       {
         original: `${PREFIX_URL}image_set_default.jpg`,
         thumbnail: `${PREFIX_URL}image_set_thumb.jpg`,
@@ -111,7 +106,10 @@ class App extends React.Component {
   }
 
   _onScreenChange(fullScreenElement) {
-    console.debug("isFullScreen?", !!fullScreenElement);
+    console.log("isFullScreen?", !!fullScreenElement);
+    this.setState({
+      isFullScreen: !!fullScreenElement,
+    });
   }
 
   _onPlay(index) {
@@ -196,6 +194,7 @@ class App extends React.Component {
 
   _EnableSetting() {
     this.setState({
+      menuContentShow: false,
       settingShow: true,
       infoShow: false,
     });
@@ -203,60 +202,156 @@ class App extends React.Component {
 
   _EnableInfo() {
     this.setState({
+      menuContentShow: false,
       settingShow: false,
       infoShow: true,
     });
   }
 
+  _showMenuContent(event) {
+    this.setState({
+      menuContentShow: true,
+      x: event.clientX,
+      y: event.clientY,
+    });
+  }
+
+  _hideSandbox() {
+    this.setState({
+      menuContentShow: false,
+      settingShow: false,
+    });
+  }
+
   render() {
+    // const menuStyle = {
+    //   position: "absolute",
+    //   top: `${this.state.y}px`,
+    //   left: `${this.state.x + 5}px`,
+    // };
     const menuStyle = {
       position: "absolute",
-      top: `${this.state.y}px`,
-      left: `${this.state.x + 5}px`,
+      top: "50%",
+      left: "50%",
+      transform: "translateX(-50%) translateY(-50%)",
     };
+    const isSandbox = clsx(
+      "app-sandbox",
+      { fullscreen: this.state.isFullScreen },
+      { showSandbox: this.state.settingShow }
+    );
+
     return (
       <section className="app">
-        <ImageGallery
-          ref={(i) => (this._imageGallery = i)}
-          items={this.images}
-          lazyLoad={false}
-          onClick={this._onImageClick.bind(this)}
-          onImageLoad={this._onImageLoad}
-          onSlide={this._onSlide.bind(this)}
-          onPause={this._onPause.bind(this)}
-          onScreenChange={this._onScreenChange.bind(this)}
-          onPlay={this._onPlay.bind(this)}
-          infinite={this.state.infinite}
-          showBullets={this.state.showBullets}
-          showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}
-          showPlayButton={this.state.showPlayButton && this.state.showGalleryPlayButton}
-          showThumbnails={this.state.showThumbnails}
-          showIndex={this.state.showIndex}
-          showNav={this.state.showNav}
-          isRTL={this.state.isRTL}
-          thumbnailPosition={this.state.thumbnailPosition}
-          slideDuration={parseInt(this.state.slideDuration)}
-          slideInterval={parseInt(this.state.slideInterval)}
-          slideOnThumbnailOver={this.state.slideOnThumbnailOver}
-          additionalClass="app-image-gallery"
-          useWindowKeyDown={this.state.useWindowKeyDown}
-        />
-
-        {this.state.menuContentShow ? (
-          <div className="menuContent" ref={this.menuContentRef} style={menuStyle}>
-            <ul>
-              <li onClick={this._EnableSetting.bind(this)}>Setting</li>
-              <li onClick={this._EnableInfo.bind(this)}>Info</li>
-            </ul>
-          </div>
-        ) : (
-          ""
-        )}
-
-        <div className="app-sandbox">
+        <div className={isSandbox}>
+          <span className="sandbox-close" onClick={this._hideSandbox.bind(this)}>
+            &#9587;
+          </span>
           {this.state.settingShow && (
             <div className="app-sandbox-content">
-              <h2 className="app-header">Settings</h2>
+              {/* <h2 className="app-header">Settings</h2> */}
+              <ul className="app-checkboxes">
+                <div>
+                  <li>
+                    <input
+                      id="infinite"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "infinite")}
+                      checked={this.state.infinite}
+                    />
+                    <label htmlFor="infinite">allow infinite sliding</label>
+                  </li>
+                  <li>
+                    <input
+                      id="show_fullscreen"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showFullscreenButton")}
+                      checked={this.state.showFullscreenButton}
+                    />
+                    <label htmlFor="show_fullscreen">show fullscreen button</label>
+                  </li>
+                </div>
+                <div>
+                  <li>
+                    <input
+                      id="show_playbutton"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showPlayButton")}
+                      checked={this.state.showPlayButton}
+                    />
+                    <label htmlFor="show_playbutton">show play button</label>
+                  </li>
+                  <li>
+                    <input
+                      id="show_bullets"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showBullets")}
+                      checked={this.state.showBullets}
+                    />
+                    <label htmlFor="show_bullets">show bullets</label>
+                  </li>
+                </div>
+                <div>
+                  <li>
+                    <input
+                      id="show_thumbnails"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showThumbnails")}
+                      checked={this.state.showThumbnails}
+                    />
+                    <label htmlFor="show_thumbnails">show thumbnails</label>
+                  </li>
+                  <li>
+                    <input
+                      id="show_navigation"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showNav")}
+                      checked={this.state.showNav}
+                    />
+                    <label htmlFor="show_navigation">show navigation</label>
+                  </li>
+                </div>
+                <div>
+                  <li>
+                    <input
+                      id="show_index"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "showIndex")}
+                      checked={this.state.showIndex}
+                    />
+                    <label htmlFor="show_index">show index</label>
+                  </li>
+                  <li>
+                    <input
+                      id="is_rtl"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "isRTL")}
+                      checked={this.state.isRTL}
+                    />
+                    <label htmlFor="is_rtl">is right to left</label>
+                  </li>
+                </div>
+                <div>
+                  <li>
+                    <input
+                      id="slide_on_thumbnail_hover"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "slideOnThumbnailOver")}
+                      checked={this.state.slideOnThumbnailOver}
+                    />
+                    <label htmlFor="slide_on_thumbnail_hover">slide on mouse over thumbnails</label>
+                  </li>
+                  <li>
+                    <input
+                      id="use_window_keydown"
+                      type="checkbox"
+                      onChange={this._handleCheckboxChange.bind(this, "useWindowKeyDown")}
+                      checked={this.state.useWindowKeyDown}
+                    />
+                    <label htmlFor="use_window_keydown">use window keydown</label>
+                  </li>
+                </div>
+              </ul>
 
               <ul className="app-buttons">
                 <li>
@@ -299,99 +394,6 @@ class App extends React.Component {
                   </div>
                 </li>
               </ul>
-
-              <ul className="app-checkboxes">
-                <li>
-                  <input
-                    id="infinite"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "infinite")}
-                    checked={this.state.infinite}
-                  />
-                  <label htmlFor="infinite">allow infinite sliding</label>
-                </li>
-                <li>
-                  <input
-                    id="show_fullscreen"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showFullscreenButton")}
-                    checked={this.state.showFullscreenButton}
-                  />
-                  <label htmlFor="show_fullscreen">show fullscreen button</label>
-                </li>
-                <li>
-                  <input
-                    id="show_playbutton"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showPlayButton")}
-                    checked={this.state.showPlayButton}
-                  />
-                  <label htmlFor="show_playbutton">show play button</label>
-                </li>
-                <li>
-                  <input
-                    id="show_bullets"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showBullets")}
-                    checked={this.state.showBullets}
-                  />
-                  <label htmlFor="show_bullets">show bullets</label>
-                </li>
-                <li>
-                  <input
-                    id="show_thumbnails"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showThumbnails")}
-                    checked={this.state.showThumbnails}
-                  />
-                  <label htmlFor="show_thumbnails">show thumbnails</label>
-                </li>
-                <li>
-                  <input
-                    id="show_navigation"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showNav")}
-                    checked={this.state.showNav}
-                  />
-                  <label htmlFor="show_navigation">show navigation</label>
-                </li>
-                <li>
-                  <input
-                    id="show_index"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "showIndex")}
-                    checked={this.state.showIndex}
-                  />
-                  <label htmlFor="show_index">show index</label>
-                </li>
-                <li>
-                  <input
-                    id="is_rtl"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "isRTL")}
-                    checked={this.state.isRTL}
-                  />
-                  <label htmlFor="is_rtl">is right to left</label>
-                </li>
-                <li>
-                  <input
-                    id="slide_on_thumbnail_hover"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "slideOnThumbnailOver")}
-                    checked={this.state.slideOnThumbnailOver}
-                  />
-                  <label htmlFor="slide_on_thumbnail_hover">slide on mouse over thumbnails</label>
-                </li>
-                <li>
-                  <input
-                    id="use_window_keydown"
-                    type="checkbox"
-                    onChange={this._handleCheckboxChange.bind(this, "useWindowKeyDown")}
-                    checked={this.state.useWindowKeyDown}
-                  />
-                  <label htmlFor="use_window_keydown">use window keydown</label>
-                </li>
-              </ul>
             </div>
           )}
           {this.state.infoShow && (
@@ -400,6 +402,46 @@ class App extends React.Component {
             </div>
           )}
         </div>
+
+        <ImageGallery
+          ref={(i) => (this._imageGallery = i)}
+          items={this.images}
+          lazyLoad={false}
+          onClick={this._onImageClick.bind(this)}
+          onImageLoad={this._onImageLoad}
+          onSlide={this._onSlide.bind(this)}
+          onPause={this._onPause.bind(this)}
+          onScreenChange={this._onScreenChange.bind(this)}
+          onPlay={this._onPlay.bind(this)}
+          infinite={this.state.infinite}
+          showBullets={this.state.showBullets}
+          showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}
+          showPlayButton={this.state.showPlayButton && this.state.showGalleryPlayButton}
+          showThumbnails={this.state.showThumbnails}
+          showIndex={this.state.showIndex}
+          showNav={this.state.showNav}
+          isRTL={this.state.isRTL}
+          thumbnailPosition={this.state.thumbnailPosition}
+          slideDuration={parseInt(this.state.slideDuration)}
+          slideInterval={parseInt(this.state.slideInterval)}
+          slideOnThumbnailOver={this.state.slideOnThumbnailOver}
+          additionalClass="app-image-gallery"
+          useWindowKeyDown={this.state.useWindowKeyDown}
+          showMenuContent={this._showMenuContent.bind(this)}
+        />
+
+        {this.state.menuContentShow ? (
+          <div className="menuContent" ref={this.menuContentRef} style={menuStyle}>
+            <ul>
+              <li onClick={this._EnableSetting.bind(this)}>Setting</li>
+              <li onClick={this._EnableInfo.bind(this)}>Info</li>
+            </ul>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {this.state.settingShow && this.state.isFullScreen && <div className="backdrop"></div>}
       </section>
     );
   }
