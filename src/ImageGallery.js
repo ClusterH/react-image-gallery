@@ -204,7 +204,7 @@ export default class ImageGallery extends React.Component {
       galleryWidth: 0,
       thumbnailsWrapperWidth: 0,
       thumbnailsWrapperHeight: 0,
-      isFullscreen: true,
+      isFullscreen: false,
       isPlaying: true,
       menuContentShow: false,
       x: 0,
@@ -257,7 +257,6 @@ export default class ImageGallery extends React.Component {
     window.addEventListener("mousedown", this.handleMouseDown);
     this.initResizeObserver(this.imageGallerySlideWrapper);
     this.addScreenChangeEvent();
-    this.toggleFullScreen();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -1165,16 +1164,16 @@ export default class ImageGallery extends React.Component {
   fullScreen() {
     const { useBrowserFullscreen } = this.props;
     const gallery = this.imageGallery.current;
-    console.log("useBrowserFullscreen===>", gallery.requestFullscreen);
+
     if (useBrowserFullscreen) {
       if (gallery.requestFullscreen) {
-        gallery.requestFullscreen();
+        gallery.requestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
       } else if (gallery.msRequestFullscreen) {
-        gallery.msRequestFullscreen();
+        gallery.msRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
       } else if (gallery.mozRequestFullScreen) {
-        gallery.mozRequestFullScreen();
+        gallery.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
       } else if (gallery.webkitRequestFullscreen) {
-        gallery.webkitRequestFullscreen();
+        gallery.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
       } else {
         // fallback to fullscreen modal for unsupported browsers
         this.setModalFullscreen(true);
@@ -1182,6 +1181,7 @@ export default class ImageGallery extends React.Component {
     } else {
       this.setModalFullscreen(true);
     }
+
     this.setState({ isFullscreen: true });
   }
 

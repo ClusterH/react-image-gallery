@@ -31,7 +31,7 @@ class App extends React.Component {
       y: 0,
       settingShow: false,
       infoShow: false,
-      isFullScreen: true,
+      isFullScreen: false,
     };
 
     this.menuContentRef = React.createRef();
@@ -117,6 +117,7 @@ class App extends React.Component {
   }
 
   _handleInputChange(state, event) {
+    console.log("setInterval", state);
     this.setState({ [state]: event.target.value });
   }
 
@@ -249,7 +250,7 @@ class App extends React.Component {
           </span>
           {this.state.settingShow && (
             <div className="app-sandbox-content">
-              {/* <h2 className="app-header">Settings</h2> */}
+              <h2 className="app-header">Settings</h2>
               <ul className="app-checkboxes">
                 <div>
                   <li>
