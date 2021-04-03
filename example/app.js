@@ -10,31 +10,15 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      showIndex: false,
-      showBullets: false,
-      infinite: true,
-      showThumbnails: false,
-      showFullscreenButton: true,
       showGalleryFullscreenButton: true,
-      showPlayButton: true,
       showGalleryPlayButton: true,
-      showNav: false,
-      isRTL: false,
       slideDuration: 450,
       slideInterval: 2000,
       slideOnThumbnailOver: false,
       thumbnailPosition: "bottom",
       showVideo: {},
-      useWindowKeyDown: true,
-      menuContentShow: false,
-      x: 0,
-      y: 0,
-      settingShow: false,
-      infoShow: false,
       isFullScreen: false,
     };
-
-    this.menuContentRef = React.createRef();
 
     this.images = [
       {
@@ -85,11 +69,7 @@ class App extends React.Component {
   }
 
   _onImageClick(event) {
-    this.setState({
-      menuContentShow: true,
-      x: event.clientX,
-      y: event.clientY,
-    });
+    console.debug("ImageClick");
   }
 
   _onImageLoad(event) {
@@ -114,19 +94,6 @@ class App extends React.Component {
 
   _onPlay(index) {
     console.debug("playing from index", index);
-  }
-
-  _handleInputChange(state, event) {
-    console.log("setInterval", state);
-    this.setState({ [state]: event.target.value });
-  }
-
-  _handleCheckboxChange(state, event) {
-    this.setState({ [state]: event.target.checked });
-  }
-
-  _handleThumbnailPositionChange(event) {
-    this.setState({ thumbnailPosition: event.target.value });
   }
 
   _getStaticImages() {
@@ -193,217 +160,9 @@ class App extends React.Component {
     );
   }
 
-  _EnableSetting() {
-    this.setState({
-      menuContentShow: false,
-      settingShow: true,
-      infoShow: false,
-    });
-  }
-
-  _EnableInfo() {
-    this.setState({
-      menuContentShow: false,
-      settingShow: false,
-      infoShow: true,
-    });
-  }
-
-  _showMenuContent(event) {
-    this.setState({
-      menuContentShow: true,
-      x: event.clientX,
-      y: event.clientY,
-    });
-  }
-
-  _hideSandbox() {
-    this.setState({
-      menuContentShow: false,
-      settingShow: false,
-    });
-  }
-
   render() {
-    // const menuStyle = {
-    //   position: "absolute",
-    //   top: `${this.state.y}px`,
-    //   left: `${this.state.x + 5}px`,
-    // };
-    const menuStyle = {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translateX(-50%) translateY(-50%)",
-    };
-    const isSandbox = clsx(
-      "app-sandbox",
-      { fullscreen: this.state.isFullScreen },
-      { showSandbox: this.state.settingShow }
-    );
-
     return (
       <section className="app">
-        <div className={isSandbox}>
-          <span className="sandbox-close" onClick={this._hideSandbox.bind(this)}>
-            &#9587;
-          </span>
-          {this.state.settingShow && (
-            <div className="app-sandbox-content">
-              <h2 className="app-header">Settings</h2>
-              <ul className="app-checkboxes">
-                <div>
-                  <li>
-                    <input
-                      id="infinite"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "infinite")}
-                      checked={this.state.infinite}
-                    />
-                    <label htmlFor="infinite">allow infinite sliding</label>
-                  </li>
-                  <li>
-                    <input
-                      id="show_fullscreen"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showFullscreenButton")}
-                      checked={this.state.showFullscreenButton}
-                    />
-                    <label htmlFor="show_fullscreen">show fullscreen button</label>
-                  </li>
-                </div>
-                <div>
-                  <li>
-                    <input
-                      id="show_playbutton"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showPlayButton")}
-                      checked={this.state.showPlayButton}
-                    />
-                    <label htmlFor="show_playbutton">show play button</label>
-                  </li>
-                  <li>
-                    <input
-                      id="show_bullets"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showBullets")}
-                      checked={this.state.showBullets}
-                    />
-                    <label htmlFor="show_bullets">show bullets</label>
-                  </li>
-                </div>
-                <div>
-                  <li>
-                    <input
-                      id="show_thumbnails"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showThumbnails")}
-                      checked={this.state.showThumbnails}
-                    />
-                    <label htmlFor="show_thumbnails">show thumbnails</label>
-                  </li>
-                  <li>
-                    <input
-                      id="show_navigation"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showNav")}
-                      checked={this.state.showNav}
-                    />
-                    <label htmlFor="show_navigation">show navigation</label>
-                  </li>
-                </div>
-                <div>
-                  <li>
-                    <input
-                      id="show_index"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "showIndex")}
-                      checked={this.state.showIndex}
-                    />
-                    <label htmlFor="show_index">show index</label>
-                  </li>
-                  <li>
-                    <input
-                      id="is_rtl"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "isRTL")}
-                      checked={this.state.isRTL}
-                    />
-                    <label htmlFor="is_rtl">is right to left</label>
-                  </li>
-                </div>
-                <div>
-                  <li>
-                    <input
-                      id="slide_on_thumbnail_hover"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "slideOnThumbnailOver")}
-                      checked={this.state.slideOnThumbnailOver}
-                    />
-                    <label htmlFor="slide_on_thumbnail_hover">slide on mouse over thumbnails</label>
-                  </li>
-                  <li>
-                    <input
-                      id="use_window_keydown"
-                      type="checkbox"
-                      onChange={this._handleCheckboxChange.bind(this, "useWindowKeyDown")}
-                      checked={this.state.useWindowKeyDown}
-                    />
-                    <label htmlFor="use_window_keydown">use window keydown</label>
-                  </li>
-                </div>
-              </ul>
-
-              <ul className="app-buttons">
-                <li>
-                  <div className="app-interval-input-group">
-                    <span className="app-interval-label">Play Interval</span>
-                    <input
-                      className="app-interval-input"
-                      type="text"
-                      onChange={this._handleInputChange.bind(this, "slideInterval")}
-                      value={this.state.slideInterval}
-                    />
-                  </div>
-                </li>
-
-                <li>
-                  <div className="app-interval-input-group">
-                    <span className="app-interval-label">Slide Duration</span>
-                    <input
-                      className="app-interval-input"
-                      type="text"
-                      onChange={this._handleInputChange.bind(this, "slideDuration")}
-                      value={this.state.slideDuration}
-                    />
-                  </div>
-                </li>
-
-                <li>
-                  <div className="app-interval-input-group">
-                    <span className="app-interval-label">Thumbnail Bar Position</span>
-                    <select
-                      className="app-interval-input"
-                      value={this.state.thumbnailPosition}
-                      onChange={this._handleThumbnailPositionChange.bind(this)}
-                    >
-                      <option value="bottom">Bottom</option>
-                      <option value="top">Top</option>
-                      <option value="left">Left</option>
-                      <option value="right">Right</option>
-                    </select>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          )}
-          {this.state.infoShow && (
-            <div className="app-sandbox-content">
-              <h2 className="app-header">Image Info</h2>
-            </div>
-          )}
-        </div>
-
         <ImageGallery
           ref={(i) => (this._imageGallery = i)}
           items={this.images}
@@ -414,35 +173,10 @@ class App extends React.Component {
           onPause={this._onPause.bind(this)}
           onScreenChange={this._onScreenChange.bind(this)}
           onPlay={this._onPlay.bind(this)}
-          infinite={this.state.infinite}
-          showBullets={this.state.showBullets}
           showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}
           showPlayButton={this.state.showPlayButton && this.state.showGalleryPlayButton}
-          showThumbnails={this.state.showThumbnails}
-          showIndex={this.state.showIndex}
-          showNav={this.state.showNav}
-          isRTL={this.state.isRTL}
-          thumbnailPosition={this.state.thumbnailPosition}
-          slideDuration={parseInt(this.state.slideDuration)}
-          slideInterval={parseInt(this.state.slideInterval)}
-          slideOnThumbnailOver={this.state.slideOnThumbnailOver}
           additionalClass="app-image-gallery"
-          useWindowKeyDown={this.state.useWindowKeyDown}
-          showMenuContent={this._showMenuContent.bind(this)}
         />
-
-        {this.state.menuContentShow ? (
-          <div className="menuContent" ref={this.menuContentRef} style={menuStyle}>
-            <ul>
-              <li onClick={this._EnableSetting.bind(this)}>Setting</li>
-              <li onClick={this._EnableInfo.bind(this)}>Info</li>
-            </ul>
-          </div>
-        ) : (
-          ""
-        )}
-
-        {this.state.settingShow && this.state.isFullScreen && <div className="backdrop"></div>}
       </section>
     );
   }

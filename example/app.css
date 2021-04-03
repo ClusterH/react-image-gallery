@@ -21,7 +21,9 @@ li {
 label {
   margin-left: 5px;
 }
-
+.app {
+  overflow: hidden;
+}
 .app-header {
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -91,9 +93,9 @@ label {
   /* width: 65%; */
 }
 
-.app .image-gallery.fullscreen {
+/* .app .image-gallery.fullscreen {
   display: contents;
-}
+} */
 
 .backdrop {
   width: 100vw;
@@ -132,21 +134,20 @@ label {
   position: absolute;
   right: 0;
   top: 0;
-  width: 0px;
-  transition: width ease 0.5s;
+  width: 300px;
+  transition: transform ease 0.5s;
   height: 100vh;
   padding-left: 20px;
-  margin-top: 0 !important;
-  background-color: transparent;
+  margin: 0 !important;
+  background-color: #fff;
   box-sizing: border-box;
+  transform: translateX(100%);
   /* margin-right: -20px; */
   z-index: 9;
 }
 
 .app-sandbox.showSandbox {
-  width: 300px;
-  margin-right: 0px;
-  background-color: #fff;
+  transform: translateX(0%);
 }
 
 .app-sandbox.showSandbox .sandbox-close {
@@ -167,6 +168,7 @@ label {
   border-radius: 5px;
   background-color: #fff;
   height: auto;
+  z-index: 999;
 }
 .menuContent > ul {
   list-style-type: none;
