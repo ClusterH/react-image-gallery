@@ -10,8 +10,8 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      showGalleryFullscreenButton: true,
-      showGalleryPlayButton: true,
+      showGalleryFullscreenButton: false,
+      showGalleryPlayButton: false,
       slideDuration: 450,
       slideInterval: 2000,
       slideOnThumbnailOver: false,
